@@ -55,51 +55,43 @@ class AutoStory():
     async def match_priority(self):
         await asyncio.sleep(0)
         await self.screenshot()
-        for pattern in self.prio_patterns:
+        for prio_pattern in self.prio_patterns:
             try:
-                w, h = pattern.img.shape[::-1]
+                w, h = prio_pattern.img.shape[::-1]
                 match = cv2.matchTemplate(
-                    self.sct_img, pattern.img, cv2.TM_CCOEFF_NORMED
+                    self.sct_img, prio_pattern.img, cv2.TM_CCOEFF_NORMED
                 )
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                 if max_val >= self.threshold:
                     match_locations = [max_loc]
-                    print(f"match_locations {pattern.name} {pattern.type} max_val{max_val} X-{match_locations}")
+                    print(f"priority match_locations {prio_pattern.name} max_val{max_val} X-{match_locations}")
                     if numpy.asarray(match_locations).size != 0:
                         x = match_locations[-1][0] + w / 2
                         y = match_locations[-1][1] + h / 2
                         self.mouse.set_position_and_left_click(x, y)
-                del match
+                        del match
+                        return
             finally:
                 pass
 
     async def match(self):
-        await asyncio.sleep(0)
         await self.screenshot()
-
-        for pattern in self.patterns:
+        for _pattern in self.patterns:
             try:
-                w, h = pattern.img.shape[::-1]
+                w, h = _pattern.img.shape[::-1]
                 match = cv2.matchTemplate(
-                    self.sct_img, pattern.img, cv2.TM_CCOEFF_NORMED
+                    self.sct_img, _pattern.img, cv2.TM_CCOEFF_NORMED
                 )
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                 if max_val >= self.threshold:
                     match_locations = [max_loc]
-                    # print(f"match_locations {pattern.name} {pattern.type} max_val{max_val} X-{match_locations}")
-                    if pattern.type in ["priority", "story_mode", "screen", "button"]:
-                        if numpy.asarray(match_locations).size != 0:
-                            # if pattern.name == "1.bmp":
-                            x = match_locations[-1][0] + w / 2
-                            y = match_locations[-1][1] + h / 2
-                            # self.address_points.append(AddressPoint(x=x, y=y))
-                            print(f"match_locations {pattern.name} max_val{max_val} X-{match_locations[-1][0]} Y-{match_locations[-1][1]}")
-                            # self.mouse.set_position_and_left_click(x, y)
-                    # elif pattern.type == "button":
-                    #     if numpy.asarray(match_locations).size != 0:
-                    #         x = match_locations[-1][0] + w / 2
-                    #         y = match_locations[-1][1] + h / 2
-                            self.mouse.set_position_and_left_click(x, y)
-                    del match
+                    if numpy.asarray(match_locations).size != 0:
+                        x = match_locations[-1][0] + w / 2
+                        y = match_locations[-1][1] + h / 2
+                        print(f"match_locations {_pattern.name} {_pattern.type} max_val{max_val} X-{match_locations[-1][0]} Y-{match_locations[-1][1]}")
+                        self.mouse.set_position_and_left_click(x, y)
+                        await asyncio.sleep(0.3)
+                        del match
+                        return
             finally:
                 pass
