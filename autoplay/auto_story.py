@@ -25,6 +25,7 @@ class AutoStory():
         self.sct_img = None
         self.bounding_box = bounding_box
         self.patterns = list()
+        self.prio_patterns = list()
         self.address_points = list()
         self.mouse = Mouse.get_instance()
 
@@ -36,7 +37,7 @@ class AutoStory():
         path = str(Path(__file__).parent.parent.absolute()) + "/vision/patterns/priority"
         for file in os.listdir(path):
             img = cv2.imread(f"{path}/{file}", 0)
-            self.patterns.append(Pattern(name=file, type='priority', img=img))
+            self.prio_patterns.append(Pattern(name=file, type='priority', img=img))
 
     async def load_all_patterns(self, folders: list):
         for folder in folders:
@@ -54,7 +55,7 @@ class AutoStory():
     async def match_priority(self):
         await asyncio.sleep(0)
         await self.screenshot()
-        for pattern in self.patterns:
+        for pattern in self.prio_patterns:
             try:
                 w, h = pattern.img.shape[::-1]
                 match = cv2.matchTemplate(
@@ -85,21 +86,20 @@ class AutoStory():
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                 if max_val >= self.threshold:
                     match_locations = [max_loc]
-                    print(f"match_locations {pattern.name} {pattern.type} max_val{max_val} X-{match_locations}")
+                    # print(f"match_locations {pattern.name} {pattern.type} max_val{max_val} X-{match_locations}")
                     if pattern.type in ["priority", "story_mode", "screen", "button"]:
                         if numpy.asarray(match_locations).size != 0:
                             # if pattern.name == "1.bmp":
                             x = match_locations[-1][0] + w / 2
                             y = match_locations[-1][1] + h / 2
                             # self.address_points.append(AddressPoint(x=x, y=y))
-                            # print(
-                            #     f"match_locations {pattern.name} max_val{max_val} X-{match_locations[-1][0]} Y-{match_locations[-1][1]}")
-                            self.mouse.set_position_and_left_click(x, y)
+                            print(f"match_locations {pattern.name} max_val{max_val} X-{match_locations[-1][0]} Y-{match_locations[-1][1]}")
+                            # self.mouse.set_position_and_left_click(x, y)
                     # elif pattern.type == "button":
                     #     if numpy.asarray(match_locations).size != 0:
                     #         x = match_locations[-1][0] + w / 2
                     #         y = match_locations[-1][1] + h / 2
-                    #         self.mouse.set_position_and_left_click(x, y)
+                            self.mouse.set_position_and_left_click(x, y)
                     del match
             finally:
                 pass
