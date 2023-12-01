@@ -83,13 +83,12 @@ class Story:
                         x = match_locations[-1][0] + w / 2 + self.bounding_box.get('left')
                         y = match_locations[-1][1] + h / 2 + self.bounding_box.get('top')
                         self.mouse.set_position_and_left_click(x, y)
+                        # print(f"{max_val} click {prio_pattern.type} {prio_pattern.name}")
                         del match
                         return
             finally:
                 pass
         for _pattern in self.patterns:
-            threshold = 0.98 if (_pattern.type == "screen"
-                                 and _pattern.name in ["3.bmp", "4.bmp"]) else self.threshold
             try:
                 w, h = _pattern.img.shape[::-1]
                 match = cv2.matchTemplate(
@@ -97,18 +96,13 @@ class Story:
                 )
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                 # print(f"{_pattern.type}{_pattern.name} min_val{min_val}, max_val{max_val}, min_loc{min_loc}, max_loc{max_loc}")
-                if max_val >= threshold:
+                if max_val >= self.threshold:
                     match_locations = [max_loc]
                     if numpy.asarray(match_locations).size != 0:
-                        if _pattern.type == "screen" and _pattern.name in ["3.bmp", "4.bmp"]:
-                            x = match_locations[-1][0] + 50 + self.bounding_box.get('left')
-                            y = match_locations[-1][1] + 50 + self.bounding_box.get('top')
-                            self.mouse.set_position_and_left_click(x, y)
-                        else:
-                            x = match_locations[-1][0] + w / 2 + self.bounding_box.get('left')
-                            y = match_locations[-1][1] + h / 2 + self.bounding_box.get('top')
-                            self.mouse.set_position_and_left_click(x, y)
-
+                        x = match_locations[-1][0] + w / 2 + self.bounding_box.get('left')
+                        y = match_locations[-1][1] + h / 2 + self.bounding_box.get('top')
+                        self.mouse.set_position_and_left_click(x, y)
+                        # print(f"{max_val} click {_pattern.type} {_pattern.name}")
                         await asyncio.sleep(0.1)
                         del match
                         return
@@ -119,8 +113,8 @@ class Story:
 
     async def find_quest(self):
         _timer = time.time()
-        while time.time() - _timer < 1:
-            for _pattern in self.patterns_quest:
+        for _pattern in self.patterns_quest:
+            while time.time() - _timer < 1:
                 try:
                     w, h = _pattern.img.shape[::-1]
                     match = cv2.matchTemplate(
@@ -131,15 +125,18 @@ class Story:
                     if max_val >= 0.48:
                         match_locations = [max_loc]
                         if numpy.asarray(match_locations).size != 0:
-                            x = match_locations[-1][0] + (w - 10) + self.bounding_box.get('left')
-                            y = match_locations[-1][1] + (h - 10) + self.bounding_box.get('top')
-                            print("click quest")
+                            x = match_locations[-1][0] + (w - 1) + self.bounding_box.get('left')
+                            y = match_locations[-1][1] + (h - 1) + self.bounding_box.get('top')
+                            print(f"{max_val} click {max_loc} {_pattern.type} {_pattern.name}")
                             self.mouse.set_position_and_left_click(x, y)
+                            await asyncio.sleep(0.1)
                             del match
                             return
                 finally:
                     pass
+            # _timer = time.time()
         print(f"not found {time.time() - _timer}")
         x = self.bounding_box.get('left') + 32
         y = self.bounding_box.get('top') + 195
         self.mouse.set_position_and_left_click(x, y)
+        print("click back")
