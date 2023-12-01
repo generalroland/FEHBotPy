@@ -28,9 +28,9 @@ async def autoplay():
     await game2.load_patterns(game2.patterns_direction)
     await game2.load_all_patterns(["story_mode", "screen", "button"])
     while os.environ.get('loop') is not None and os.environ['loop'] == '1':
-        await game1.screenshot()
-        await game1.match()
-        await asyncio.sleep(0)
+        # await game1.screenshot()
+        # await game1.match()
+        # await asyncio.sleep(0)
         await game2.screenshot()
         await game2.match()
         await asyncio.sleep(0)
