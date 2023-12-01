@@ -45,3 +45,7 @@ class Mouse:
     def set_position_and_right_click(self, x: int, y: int):
         self.set_position(x, y)
         self.right_click()
+
+    def set_position_and_scroll_top(self, x: int, y: int):
+        self.set_position(x, y)
+        self.mouse.scroll(0, 1)
