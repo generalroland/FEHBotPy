@@ -49,3 +49,11 @@ class Mouse:
     def set_position_and_scroll_top(self, x: int, y: int):
         self.set_position(x, y)
         self.mouse.scroll(0, 1)
+
+    def set_position_and_move(self, x: int, y: int, _x: int, _y: int):
+        sleep(self.sleep)
+        self.mouse.position = (x, y)
+        self.mouse.press(Button.left)
+        self.mouse.move(_x, _y)
+        sleep(0.6)
+        self.mouse.release(Button.left)

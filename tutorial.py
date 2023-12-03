@@ -3,30 +3,27 @@ import os
 
 from devices import KeyboardListener
 from vision import Story
+from vision import Tutorial
 
 
 async def autoplay():
-    game1 = Story(bounding_box={
+    game1 = Tutorial(bounding_box={
         "top": 42,
         "left": 2,
         "width": 540,
         "height": 960,
     })
-    game2 = Story(bounding_box={
+    game2 = Tutorial(bounding_box={
         "top": 42,
         "left": 546,
         "width": 540,
         "height": 960,
     })
     os.environ['loop'] = '1'
-    await game1.load_priority_patterns()
-    await game1.load_patterns(game1.patterns_quest)
     await game1.load_patterns(game1.patterns_direction)
-    await game1.load_all_patterns(["screen", "button"])
-    await game2.load_priority_patterns()
-    await game2.load_patterns(game2.patterns_quest)
+    await game1.load_all_patterns(["tutorial", "screen", "button"])
     await game2.load_patterns(game2.patterns_direction)
-    await game2.load_all_patterns(["screen", "button"])
+    await game2.load_all_patterns(["tutorial", "screen", "button"])
     while os.environ.get('loop') is not None and os.environ['loop'] == '1':
         await game1.screenshot()
         await game1.match()

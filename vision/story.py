@@ -15,11 +15,11 @@ from models import *
 class Story:
     def __init__(self,
                  bounding_box={
-                     "top": 0,
-                     "left": 0,
-                     "width": 1255,
-                     "height": 1400,
-                 }, ):
+                    "top": 42,
+                    "left": 2,
+                    "width": 540,
+                    "height": 960,
+                }):
         self.threshold = 0.8
         self.sct = mss()
         self.sct_original = None
@@ -31,6 +31,8 @@ class Story:
         self.mouse = Mouse.get_instance()
         self.patterns_quest = list()
         self.patterns_direction = list()
+        self.x = self.bounding_box.get('left') + self.bounding_box.get('width') - 5
+        self.y = self.bounding_box.get('top') + 5
 
     async def screenshot(self):
         self.sct_original = numpy.asarray(self.sct.grab(self.bounding_box))
@@ -69,7 +71,7 @@ class Story:
         self.patterns = list()
 
     async def match(self):
-        # await self.screenshot()
+        await self.spam_click()
         for prio_pattern in self.prio_patterns:
             try:
                 w, h = prio_pattern.img.shape[::-1]
@@ -122,7 +124,7 @@ class Story:
                     )
                     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                     print(f"{_pattern.type}{_pattern.name} min_val{min_val}, max_val{max_val}, min_loc{min_loc}, max_loc{max_loc}")
-                    if max_val >= 0.55:
+                    if max_val >= 0.48:
                         match_locations = [max_loc]
                         if numpy.asarray(match_locations).size != 0:
                             x = match_locations[-1][0] + (w - 1) + self.bounding_box.get('left')
@@ -140,3 +142,7 @@ class Story:
         y = self.bounding_box.get('top') + 195
         self.mouse.set_position_and_left_click(x, y)
         print("click back")
+
+
+    async def spam_click(self):
+        self.mouse.set_position_and_left_click(self.x, self.y)
