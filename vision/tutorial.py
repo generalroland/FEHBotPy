@@ -70,6 +70,7 @@ class Tutorial:
         self.patterns = list()
 
     async def match(self):
+        await self.spam_click()
         for _pattern in self.patterns:
             try:
                 w, h = _pattern.img.shape[::-1]
