@@ -2,7 +2,6 @@ import asyncio
 import os
 
 from devices import KeyboardListener
-from vision import Story
 from vision import Tutorial
 
 
