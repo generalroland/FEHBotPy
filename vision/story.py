@@ -115,8 +115,8 @@ class Story:
 
     async def find_quest(self):
         _timer = time.time()
-        for _pattern in self.patterns_quest:
-            while time.time() - _timer < 1:
+        while time.time() - _timer < 1:
+            for _pattern in self.patterns_quest:
                 try:
                     w, h = _pattern.img.shape[::-1]
                     match = cv2.matchTemplate(
