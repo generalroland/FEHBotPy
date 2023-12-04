@@ -128,7 +128,7 @@ class Story:
     # threshold main quest: 0.80
     async def find_quest(self):
         _timer = time.time()
-        while time.time() - _timer < 1:
+        while time.time() - _timer < 0.5:
             _sct_img = await self.get_quest_screenshot()
             for _pattern in self.patterns_quest:
                 try:
@@ -138,7 +138,7 @@ class Story:
                     )
                     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                     print(f"{_pattern.type}{_pattern.name} min_val{min_val}, max_val{max_val}, min_loc{min_loc}, max_loc{max_loc}")
-                    if max_val >= 0.87:
+                    if max_val >= 0.85:
                         match_locations = [max_loc]
                         if numpy.asarray(match_locations).size != 0:
                             x = match_locations[-1][0] + (w - 1) + self.quest_bounding_box.get('left')
