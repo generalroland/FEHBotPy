@@ -144,7 +144,7 @@ class Story:
                             x = match_locations[-1][0] + (w - 1) + self.quest_bounding_box.get('left')
                             y = match_locations[-1][1] + (h - 1) + self.quest_bounding_box.get('top')
                             print(f"{max_val} click {max_loc} {_pattern.type} {_pattern.name} ({x},{y})")
-                            # self.mouse.set_position_and_left_click(x, y)
+                            self.mouse.set_position_and_left_click(x, y)
                             await asyncio.sleep(0.1)
                             del match
                             return
@@ -154,7 +154,7 @@ class Story:
         print(f"not found {time.time() - _timer}")
         x = self.bounding_box.get('left') + 32
         y = self.bounding_box.get('top') + 195
-        # self.mouse.set_position_and_left_click(x, y)
+        self.mouse.set_position_and_left_click(x, y)
         print("click back")
 
 
