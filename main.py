@@ -29,9 +29,9 @@ async def autoplay():
         await game1.screenshot()
         await game1.match()
         await asyncio.sleep(0)
-        await game2.screenshot()
-        await game2.match()
-        await asyncio.sleep(0)
+        # await game2.screenshot()
+        # await game2.match()
+        # await asyncio.sleep(0)
 
 
 async def main():
