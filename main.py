@@ -21,11 +21,9 @@ async def autoplay():
     os.environ['loop'] = '1'
     await game1.load_priority_patterns()
     await game1.load_patterns(game1.patterns_quest)
-    await game1.load_patterns(game1.patterns_direction)
     await game1.load_all_patterns(["screen", "button"])
     await game2.load_priority_patterns()
     await game2.load_patterns(game2.patterns_quest)
-    await game2.load_patterns(game2.patterns_direction)
     await game2.load_all_patterns(["screen", "button"])
     while os.environ.get('loop') is not None and os.environ['loop'] == '1':
         await game1.screenshot()
