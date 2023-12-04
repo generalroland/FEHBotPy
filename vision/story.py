@@ -138,7 +138,7 @@ class Story:
                     )
                     min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(match)
                     print(f"{_pattern.type}{_pattern.name} min_val{min_val}, max_val{max_val}, min_loc{min_loc}, max_loc{max_loc}")
-                    if max_val >= 0.92:
+                    if max_val >= 0.90:
                         match_locations = [max_loc]
                         if numpy.asarray(match_locations).size != 0:
                             x = match_locations[-1][0] + (w - 1) + self.quest_bounding_box.get('left')
